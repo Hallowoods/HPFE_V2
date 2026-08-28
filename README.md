@@ -41,7 +41,7 @@ Some scripts only require NumPy and Matplotlib. PaddlePaddle, Paddle Quantum, an
 
 ## Output Directory
 
-The plotting scripts in `upload_git` use a user-defined output directory:
+The plotting scripts in [`upload_git`](./upload_git) use a user-defined output directory:
 
 ```python
 folder_path = rf"xxxx"  # User defined
@@ -59,24 +59,24 @@ The directory is created automatically if it does not already exist.
 
 | Figure / Output | Corresponding Code | Notes |
 |---|---|---|
-| `gain_combined_n10.png/.pdf` | [`upload_git/plot_gain_combined.py`](./upload_git/plot_gain_combined.py) | Combined analytical gain $\Lambda(R,x,\epsilon)$. |
-| `gain_combined_ghz_z1noise_n10.png/.pdf` | [`upload_git/plot_gain_combined_ghz_z1noise.py`](./upload_git/plot_gain_combined_ghz_z1noise.py) | GHZ target state under single-qubit $Z_1$ Pauli noise. |
-| `gain_combined_coherent_s77_numerical.png/.pdf` | [`upload_git/plot_gain_coherent_skk_numerical.py`](./upload_git/plot_gain_coherent_skk_numerical.py) | Numerical Clifford CRM calculation under coherent noise. |
-| `lambda_vs_M2_two_panels_short_ticks_legend_reversed.png/.pdf` | [`upload_git/lambda_vs_M2_two_panels_short_ticks_legend_reversed.py`](./upload_git/lambda_vs_M2_two_panels_short_ticks_legend_reversed.py) | Optimized gain versus stabilizer Rényi entropy $M_2(\sigma)$. |
-| [Figure 2](./figures/fig2.png) | `upperbound_k_0808.py`<br>`4design_upperbound_k.py`<br>`4design_and_Clifford_sametime(0304coherent).py` | — |
-| [Figure 3](./figures/fig3.png) | `runmpi.py` | Pauli CRM is simulated numerically. Clifford and 4-design CRM are evaluated analytically. |
-| [Figure 4](./figures/fig4.png) | `single_pauli_error.py` | Set `fdesign` to select Clifford or 4-design CRM. |
-| [Figure S1](./figures/figS1.png) | `sampling0820.py` | Clifford and 4-design CRM under Pauli noise. |
-| [Figure S2](./figures/figS2.png) | `sampling0820_unitary.py` | Clifford and 4-design CRM under coherent noise. |
-| [Figure S3](./figures/figS3.png) | `upperboundterms_k_depolar.py` | — |
-| [Figure S4](./figures/figS4.png) | `unoise_1022vio.py` | — |
-| [Figure S5](./figures/figS5.png) | `upperbound_k_0808.py` | Set the parameters to the values used for Figure S5. |
-| [Figure S6](./figures/figS6.png) | `A_Small_repetition_upperbound_k.py` | — |
-| [Figure S7](./figures/figS7.png) | `upperboundterms_k copy 2.py` | — |
-| [Figure S8](./figures/figS8.png) | `ghz_diffferent_n.py` | — |
-| [Figure S9](./figures/figS9.png) | Eqs. (2), (165), and (166) | Calculated directly from the analytical expressions. |
-| [Figure S10](./figures/figS10.png) | `PauliCRMTFIM_EDGS.py` | Pauli CRM is evaluated numerically. Clifford and 4-design CRM are evaluated analytically. |
-| [Figure S11](./figures/figS11.png) | `PauliCRMTFIM_EDGS.py` | Pauli CRM is evaluated numerically. Clifford and 4-design CRM are evaluated analytically. |
+| [`gain_combined_n10`](./figures/gain_combined_n10.png) | [`plot_gain_combined.py`](./upload_git/plot_gain_combined.py) | Combined analytical gain $\Lambda(R,x,\epsilon)$. |
+| [`gain_combined_ghz_z1noise_n10`](./figures/gain_combined_ghz_z1noise_n10.png) | [`plot_gain_combined_ghz_z1noise.py`](./upload_git/plot_gain_combined_ghz_z1noise.py) | GHZ target state under single-qubit $Z_1$ Pauli noise. |
+| [`gain_combined_coherent_s77_numerical`](./figures/gain_combined_coherent_s77_numerical.png) | [`plot_gain_coherent_skk_numerical.py`](./upload_git/plot_gain_coherent_skk_numerical.py) | Numerical Clifford CRM calculation under coherent noise. |
+| [`lambda_vs_M2_two_panels_short_ticks_legend_reversed`](./figures/lambda_vs_M2_two_panels_short_ticks_legend_reversed.png) | [`lambda_vs_M2_two_panels_short_ticks_legend_reversed.py`](./upload_git/lambda_vs_M2_two_panels_short_ticks_legend_reversed.py) | Optimized gain versus stabilizer Rényi entropy $M_2(\sigma)$. |
+| [Figure 2](./figures/fig2.png) | [`upperbound_k_0808.py`](./upperbound_k_0808.py)<br>[`4design_upperbound_k.py`](./4design_upperbound_k.py)<br>[`4design_and_Clifford_sametime(0304coherent).py`](./4design_and_Clifford_sametime%280304coherent%29.py) | — |
+| [Figure 3](./figures/fig3.png) | [`runmpi.py`](./runmpi.py) | Pauli CRM is simulated numerically. Clifford and 4-design CRM are evaluated analytically. |
+| [Figure 4](./figures/fig4.png) | [`single_pauli_error.py`](./single_pauli_error.py) | Set `fdesign` to select Clifford or 4-design CRM. |
+| [Figure S1](./figures/figS1.png) | [`sampling0820.py`](./sampling0820.py) | Clifford and 4-design CRM under Pauli noise. |
+| [Figure S2](./figures/figS2.png) | [`sampling0820_unitary.py`](./sampling0820_unitary.py) | Clifford and 4-design CRM under coherent noise. |
+| [Figure S3](./figures/figS3.png) | [`upperboundterms_k_depolar.py`](./upperboundterms_k_depolar.py) | — |
+| [Figure S4](./figures/figS4.png) | [`unoise_1022vio.py`](./unoise_1022vio.py) | — |
+| [Figure S5](./figures/figS5.png) | [`upperbound_k_0808.py`](./upperbound_k_0808.py) | Set the parameters to the values used for Figure S5. |
+| [Figure S6](./figures/figS6.png) | [`A_Small_repetition_upperbound_k.py`](./A_Small_repetition_upperbound_k.py) | — |
+| [Figure S7](./figures/figS7.png) | [`upperboundterms_k copy 2.py`](./upperboundterms_k%20copy%202.py) | — |
+| [Figure S8](./figures/figS8.png) | [`ghz_diffferent_n.py`](./ghz_diffferent_n.py) | — |
+| [Figure S9](./figures/figS9.png) | [Eqs. (2), (165), and (166)](https://arxiv.org/pdf/2511.22509) | Calculated directly from the analytical expressions. |
+| [Figure S10](./figures/figS10.png) | [`PauliCRMTFIM_EDGS.py`](./PauliCRMTFIM_EDGS.py) | Pauli CRM is evaluated numerically. Clifford and 4-design CRM are evaluated analytically. |
+| [Figure S11](./figures/figS11.png) | [`PauliCRMTFIM_EDGS.py`](./PauliCRMTFIM_EDGS.py) | Pauli CRM is evaluated numerically. Clifford and 4-design CRM are evaluated analytically. |
 
 ## Running the Additional Plotting Scripts
 
@@ -86,10 +86,10 @@ The directory is created automatically if it does not already exist.
 python upload_git/plot_gain_combined.py
 ```
 
-This script generates:
+Generated files:
 
-- `gain_combined_n10.png`
-- `gain_combined_n10.pdf`
+- [`gain_combined_n10.png`](./figures/gain_combined_n10.png)
+- [`gain_combined_n10.pdf`](./figures/gain_combined_n10.pdf)
 
 ### GHZ state under single-qubit Pauli noise
 
@@ -97,10 +97,10 @@ This script generates:
 python upload_git/plot_gain_combined_ghz_z1noise.py
 ```
 
-This script generates:
+Generated files:
 
-- `gain_combined_ghz_z1noise_n10.png`
-- `gain_combined_ghz_z1noise_n10.pdf`
+- [`gain_combined_ghz_z1noise_n10.png`](./figures/gain_combined_ghz_z1noise_n10.png)
+- [`gain_combined_ghz_z1noise_n10.pdf`](./figures/gain_combined_ghz_z1noise_n10.pdf)
 
 ### Product magic state under coherent noise
 
@@ -108,11 +108,11 @@ This script generates:
 python upload_git/plot_gain_coherent_skk_numerical.py
 ```
 
-This script generates:
+Generated files:
 
-- `gain_combined_coherent_s77_numerical.png`
-- `gain_combined_coherent_s77_numerical.pdf`
-- Numerical variance and gain data in `coherent_s77_data`
+- [`gain_combined_coherent_s77_numerical.png`](./figures/gain_combined_coherent_s77_numerical.png)
+- [`gain_combined_coherent_s77_numerical.pdf`](./figures/gain_combined_coherent_s77_numerical.pdf)
+- [`coherent_s77_data`](./figures/coherent_s77_data)
 
 ### Optimized gain versus stabilizer Rényi entropy
 
@@ -120,10 +120,10 @@ This script generates:
 python upload_git/lambda_vs_M2_two_panels_short_ticks_legend_reversed.py
 ```
 
-This script generates:
+Generated files:
 
-- `lambda_vs_M2_two_panels_short_ticks_legend_reversed.png`
-- `lambda_vs_M2_two_panels_short_ticks_legend_reversed.pdf`
+- [`lambda_vs_M2_two_panels_short_ticks_legend_reversed.png`](./figures/lambda_vs_M2_two_panels_short_ticks_legend_reversed.png)
+- [`lambda_vs_M2_two_panels_short_ticks_legend_reversed.pdf`](./figures/lambda_vs_M2_two_panels_short_ticks_legend_reversed.pdf)
 
 ## Notes
 
@@ -149,4 +149,4 @@ If you use this code, please cite:
 
 ## License
 
-This project is released under the MIT License.
+This project is released under the [MIT License](./LICENSE).
