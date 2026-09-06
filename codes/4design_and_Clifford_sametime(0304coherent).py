@@ -54,7 +54,7 @@ def generate_pauli_group(nqubit):
             formatted_pauli.append(','.join(pauli_str))      
         elif not pauli_str and pauli_ops != tuple(['I'] * nqubit):
             continue
-         pauli_group.append(formatted_pauli)
+        pauli_group.append(formatted_pauli)
     # Write into a JSON file
     with open(json_path, "w") as f:
         json.dump(pauli_group, f, indent=4)
@@ -65,35 +65,57 @@ def generate_pauli_group(nqubit):
     del pauli_group[0]
     return pauli_group 
 
-def generate_theta_vector(nqubit, mag):
+def generate_theta_vector(num_sites, xi):
+    """Generate local rotation angles with a prescribed product ``xi``.
+
+    The positive random weights ``w_k`` are normalized so that
+    ``sum_k w_k = 1``.  Defining ``h_k = xi**w_k`` then guarantees
+
+        0 < h_k <= 1,
+        prod_k h_k = xi,
+        prod_k cos(theta_k / 2)**2 = xi,
+
+
+    for ``theta_k = arccos(2*h_k - 1)``.
     """
-    Generates a vector of `nqubit` theta values. 
-    Each theta_i = arccos(sqrt(v_i)), subject to v_i >= 0 and sum(v_i) = mag.
-    Returns a vector of 2 * theta_i.
-    """
-    # Step 1: Randomly generate `nqubit` numbers in the range [0, 1)
-    v = np.random.rand(nqubit)
-    beta = np.log2(mag)
-    
-    # Step 2: Normalize the vector so that sum(v) = mag (using beta as the scaling factor)
-    v = v / np.sum(v) * beta
-    
-    # Step 3: Take the square root of each component and then apply arccos
-    theta = np.arccos(2 * 2**v - 1)
+    xi = float(xi)
+    if not 0.0 < xi <= 1.0:
+        raise ValueError("xi must satisfy 0 < xi <= 1.")
+    if num_sites < 1:
+        raise ValueError("num_sites must be a positive integer.")
 
-    # Step 4: Return 2 * theta
-    return 2 * theta
+    raw_weights = np.random.rand(num_sites)
+    weights = raw_weights / np.sum(raw_weights)
+
+    # Normalize in logarithmic coordinates.  This is equivalent to
+    # h_k = xi**weights[k], but is numerically stable when xi is close to 1.
+    h = np.exp(weights * np.log(xi))
+    theta = np.arccos(np.clip(2.0 * h - 1.0, -1.0, 1.0))
+
+    # Guard against accidental changes to the sampling convention.
+    if not np.isclose(np.prod(h), xi, rtol=1e-12, atol=1e-15):
+        raise RuntimeError("Failed to impose prod_k h_k = xi.")
+    if not np.isclose(
+        np.prod(np.cos(theta / 2.0) ** 2), xi, rtol=1e-12, atol=1e-15
+    ):
+        raise RuntimeError("Generated angles do not reproduce the target xi.")
+
+    return theta
 
 
-def generate_random_unitary_channel_rotation2(nqubit, mag, num_sites=1):
-    """Generate random local rotations on random sites, the noise is parametrized by "mag". This returns a channel info indicating the chosen sites, angles and axis"""
+def generate_random_unitary_channel_rotation2(nqubit, xi, num_sites=1):
+    """Generate random local rotations on randomly selected qubit sites."""
+    if not 1 <= num_sites <= nqubit:
+        raise ValueError("num_sites must lie between 1 and nqubit.")
+
     channel_info = []
     sites = random.sample(range(0, nqubit), num_sites)
-    thetalist = generate_theta_vector(num_sites, mag)
-    for i  in range(len(sites)):
+    thetalist = generate_theta_vector(num_sites, xi)
+    for i in range(len(sites)):
         site = sites[i]
         theta = thetalist[i]
         vec = np.random.randn(3)
+        axis = vec / np.linalg.norm(vec)
         channel_info.append([site, theta, axis.tolist()])  
 
     filename = 'unitary_channel(local_rotation).pkl'
@@ -130,15 +152,18 @@ def axis_to_u3_params(theta, axis):
                   [-1j * (nx + 1j * ny) * sin_term, cos_term + 1j * nz * sin_term]])
 
     # Extract U3 parameters from R
-    theta_u3 = 2 * np.arccos(np.abs(R[0,0]))
+    theta_u3 = 2 * np.arctan2(np.abs(R[1, 0]), np.abs(R[0, 0]))
     
     # Avoid division by zero
     if np.sin(theta_u3/2) < 1e-12:
         phi = 0.0
         lam = np.angle(R[1,1]) - np.angle(R[0,0])
     else:
-        phi = np.angle(R[1,0])
-        lam = np.angle(-R[0,1])
+        # Remove the phase of R[0,0].  The resulting U3 matrix equals R up
+        # to a global phase, which is immaterial for the density operator.
+        global_phase = np.angle(R[0, 0]) if np.abs(R[0, 0]) > 1e-12 else 0.0
+        phi = np.angle(R[1,0]) - global_phase
+        lam = np.angle(-R[0,1]) - global_phase
 
     return [theta_u3, phi, lam]
 
@@ -347,7 +372,7 @@ def compute_for_magnitude(magnow, state1,state2, nqubit,noisetype='rotation',err
         sample1,sample_thr1,N_m1,partone_crm1,parttwo1,partone_thr1]
     results2 = [1 / (1 - np.real(fidelity2)), sample_42,sample_thr_42,np.real(vu2),N_m_term2,vstar2,remain2,np.real(character2),
         np.real(cross_character2),
-        sample2,sample_thr2,N_m1,partone_crm2,parttwo2,partone_thr2]
+        sample2,sample_thr2,N_m2,partone_crm2,parttwo2,partone_thr2]
     return (results1,results2)
 
 
@@ -366,7 +391,10 @@ def main(nqubit, errorsites,theta,statetype,noisetype='rotation',):
 
     N = 550
     bx = np.linspace(0,4,N)
-    magnitudelist = 1-10**(-bx)
+    # Here magnitudelist contains xi rather than the infidelity itself.
+    # The xi=0 endpoint is excluded because logarithmic normalization
+    # requires 0 < xi <= 1.
+    magnitudelist = (1-10**(-bx))[1:]
 
 
 
@@ -387,7 +415,7 @@ def main(nqubit, errorsites,theta,statetype,noisetype='rotation',):
         results = pool.starmap(
     compute_for_magnitude,
     [(magnitudelist[i], state1, state7, nqubit, noisetype, errorsites)
-     for i in range(len(magnitudelist)-1)]
+     for i in range(len(magnitudelist))]
 )
 
         results1, results2 = zip(*results)
